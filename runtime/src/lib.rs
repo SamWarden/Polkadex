@@ -52,6 +52,8 @@ pub use sp_runtime::{Perbill, Permill};
 pub use pallet_substratee_registry;
 
 
+pub use pallet_exchange;
+
 /// An index to a block.
 pub type BlockNumber = u32;
 
@@ -436,6 +438,15 @@ impl orml_currencies::Config for Runtime {
     type WeightInfo = ();
 }
 
+
+/// Configure the pallet-template in pallets/template.
+impl pallet_exchange::Config for Runtime {
+	type Event = Event;
+	type Currency = Currencies;
+	type OrderId = u32;
+}
+
+
 parameter_types! {
 	pub const MomentsPerDay: Moment = 86_400_000; // [ms/d]
 }
@@ -474,7 +485,13 @@ construct_runtime!(
         Proxy: pallet_proxy::{Pallet, Call, Storage, Event<T>},
         PolkadexFungibleAsset: polkadex_fungible_assets::{Pallet, Call, Storage, Event<T>},
         SubstrateeRegistry: pallet_substratee_registry::{Pallet, Call, Storage, Event<T>},
-        PolkadexOcex: polkadex_ocex::{Pallet, Call, Event<T>},
+        PolkadexOcex: polkadex_ocex::{Pallet, Call, Storage, Config<T>, Event<T>},
+        TokenFaucet: token_faucet_pallet::{Pallet, Call, Event<T>, Storage, ValidateUnsigned},
+        ChainBridge: chainbridge::{Pallet, Call, Storage, Event<T>},
+        Example: example::{Pallet, Call, Event<T>},
+        Erc721: erc721::{Pallet, Call, Storage, Event<T>},
+
+	Exchange: pallet_exchange::{Module, Storage, Call, Event<T>};
     }
 );
 
@@ -672,6 +689,8 @@ impl_runtime_apis! {
             add_benchmark!(params, batches, pallet_timestamp, Timestamp);
             add_benchmark!(params, batches, pallet_template, TemplateModule);
 
+	    add_benchmark!(params, batches, pallet_exchange, Exchange);
+	    
             if batches.is_empty() { return Err("Benchmark not found for this pallet.".into()) }
             Ok(batches)
         }
