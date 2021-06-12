@@ -55,6 +55,7 @@ orml-traits = { git = "https://github.com/Polkadex-Substrate/open-runtime-module
 polkadex-primitives = { path = "../primitives", default-features = false }
 polkadex-fungible-assets = { path = "../pallets/fungible-assets", version = "0.1.0", default-features = false }
 polkadex-ocex = { path = "../pallets/ocex", default-features = false }
+pallet-exchange = { path = "../pallets/exchange", default-features = false }
 pallet-substratee-registry = {git = "https://github.com/Polkadex-Substrate/pallet-substratee-registry.git", default-features = false}
 
 [build-dependencies]
@@ -94,6 +95,7 @@ std = [
 	"polkadex-primitives/std",
 	"polkadex-fungible-assets/std",
 	"polkadex-ocex/std",
+	"pallet-exchange/std",
 	"pallet-substratee-registry/std",
 	"pallet-proxy/std"
 ]
