@@ -24,6 +24,7 @@ use frame_support::{
     dispatch::DispatchResult,
     ensure,
     traits::{EnsureOrigin, Get},
+    weights::{Pays},
 };
 use frame_system as system;
 use frame_system::{ensure_signed};
@@ -178,7 +179,7 @@ decl_module! {
         fn deposit_event() = default;
 
         /// Create new token.
-        #[weight = 10000]
+        #[weight = (10000, Pays::No)]
         pub fn create_token(origin,
                         asset_id: T::CurrencyId,
                         max_supply: T::Balance,
@@ -201,7 +202,7 @@ decl_module! {
         }
 
         /// Vesting
-        #[weight = 10000]
+        #[weight = (10000, Pays::No)]
         pub fn set_vesting_info(origin, amount: T::Balance, asset_id: T::CurrencyId, rate: T::Balance, account: T::AccountId) -> DispatchResult {
             let who: T::AccountId = ensure_signed(origin)?;
             let asset_info: AssetInfo<T> = <InfoAsset<T>>::get(asset_id);
@@ -215,7 +216,7 @@ decl_module! {
         }
 
         /// Claim
-        #[weight = 10000]
+        #[weight = (10000, Pays::No)]
         pub fn claim_vesting(origin, identifier: T::Hash, asset_id: T::CurrencyId) -> DispatchResult {
             let who: T::AccountId = ensure_signed(origin)?;
             let current_block_no = <system::Module<T>>::block_number();
@@ -233,7 +234,7 @@ decl_module! {
         }
 
         /// Set Metadata
-        #[weight = 10000]
+        #[weight = (10000, Pays::No)]
         pub fn set_metadata_fungible(origin, asset_id: T::CurrencyId, metadata: AssetMetadata) -> DispatchResult {
             let who: T::AccountId = ensure_signed(origin)?;
             ensure!(<InfoAsset<T>>::contains_key(&asset_id), <Error<T>>::AssetIdNotExists);
@@ -248,7 +249,7 @@ decl_module! {
         }
 
         /// Minting
-        #[weight = 10000]
+        #[weight = (10000, Pays::Yes)]
         pub fn mint_fungible(origin,to: T::AccountId, asset_id: T::CurrencyId, amount: T::Balance) -> DispatchResult {
             let who: T::AccountId = ensure_signed(origin)?;
             Self::mint_token(&who, &to,asset_id, amount)?;
@@ -257,7 +258,7 @@ decl_module! {
         }
 
         /// Burn
-        #[weight = 10000]
+        #[weight = (10000, Pays::No)]
         pub fn burn_fungible(origin, asset_id: T::CurrencyId, amount: T::Balance) -> DispatchResult {
             let who: T::AccountId = ensure_signed(origin)?;
             Self::burn_token(&who,asset_id, amount)?;
@@ -266,7 +267,7 @@ decl_module! {
         }
 
         /// Attest Token
-        #[weight = 10000]
+        #[weight = (10000, Pays::No)]
         pub fn attest_token(origin, asset_id: T::CurrencyId) -> DispatchResult {
             T::GovernanceOrigin::ensure_origin(origin)?;
             ensure!(<InfoAsset<T>>::contains_key(&asset_id), <Error<T>>::AssetIdNotExists);
@@ -278,7 +279,7 @@ decl_module! {
         }
 
         /// Modify Token Registration
-        #[weight = 10000]
+        #[weight = (10000, Pays::No)]
         pub fn modify_token_deposit_amount(origin, pdx_amount: T::Balance) -> DispatchResult {
             T::GovernanceOrigin::ensure_origin(origin)?;
             <FixedPDXAmount<T>>::put::<T::Balance>(pdx_amount);

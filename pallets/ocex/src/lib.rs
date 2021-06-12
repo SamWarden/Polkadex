@@ -21,6 +21,7 @@
 use frame_support::StorageMap;
 use frame_support::{
     decl_error, decl_event, decl_module, dispatch::DispatchResult, ensure, traits::Get, PalletId,
+    weights::{Pays},
 };
 use frame_system as system;
 use frame_system::ensure_signed;
@@ -75,7 +76,7 @@ decl_module! {
         fn deposit_event() = default;
 
         /// Deposit
-        #[weight = 10000]
+        #[weight = (10000, Pays::No)]
         pub fn deposit(origin, asset_id:  AssetId, amount: T::Balance) -> DispatchResult{
             let from: T::AccountId = ensure_signed(origin)?;
             <T as Config>::Currency::transfer(asset_id, &from, &Self::get_account(), amount)?;
@@ -84,7 +85,7 @@ decl_module! {
         }
 
         /// Release
-        #[weight = 10000]
+	#[weight = (10000, Pays::No)]
         pub fn release(origin, asset_id:  AssetId, amount: T::Balance, to: T::AccountId) -> DispatchResult{
             let sender: T::AccountId = ensure_signed(origin)?;
             ensure!(pallet_substratee_registry::EnclaveIndex::<T>::contains_key(&sender), Error::<T>::NotARegisteredEnclave);
@@ -96,7 +97,7 @@ decl_module! {
 
         /// Withdraw
         /// It helps to notify enclave about sender's intend to withdraw via on-chain
-        #[weight = 10000]
+        #[weight = (10000, Pays::No)]
         pub fn withdraw(origin, asset_id:  AssetId, to: T::AccountId,amount: T::Balance) -> DispatchResult{
             let sender: T::AccountId = ensure_signed(origin)?;
             Self::deposit_event(RawEvent::TokenWithdrawn(asset_id, to, amount));
