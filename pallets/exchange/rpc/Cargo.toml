@@ -1,0 +1,36 @@
+[package]
+name = "exchange-rpc"
+version = "2.0.0"
+edition = "2018"
+authors = ['Substrate DevHub <https://github.com/substrate-developer-hub>']
+repository = 'https://github.com/substrate-developer-hub/recipes'
+description = "A pallet that demonstrates simple RPC for summing numbers"
+license = "GPL-3.0-or-later"
+
+[dependencies]
+codec = { package = "parity-scale-codec", version = "2.0.0", default-features = false, features = ["derive"] }
+jsonrpc-core = "15.0"
+jsonrpc-core-client = "15.0"
+jsonrpc-derive = "15.0"
+serde = { version = "1.0", features = ["derive"], optional = true }
+
+# Substrate packages
+
+sp-api = { version = "3.0.0", default-features = false, git = "https://github.com/paritytech/substrate.git" }
+sp-blockchain = { version = "3.0.0", default-features = false, git = "https://github.com/paritytech/substrate.git" }
+sp-runtime = { version = "3.0.0", default-features = false, git = "https://github.com/paritytech/substrate.git" }
+sp-rpc = { version = "3.0.0", default-features = false, git = "https://github.com/paritytech/substrate.git" }
+frame-support = { version = "3.0.0", default-features = false, git = "https://github.com/paritytech/substrate.git" }
+
+# local packages
+
+exchange-runtime-api = { version = "2.0.0", path = "../runtime_api", default-features = false }
+
+[features]
+default = ["std"]
+std = [
+  "serde",
+  "sp-api/std",
+  "sp-runtime/std",
+  "exchange-runtime-api/std"
+]
