@@ -126,6 +126,7 @@ where
     C::Api: pallet_transaction_payment_rpc::TransactionPaymentRuntimeApi<Block, Balance>,
     C::Api: BabeApi<Block>,
     C::Api: BlockBuilder<Block>,
+    C::Api: exchange_runtime_api::ExchangeApi<Block>,
     P: TransactionPool + 'static,
     SC: SelectChain<Block> + 'static,
     B: sc_client_api::Backend<Block> + Send + Sync + 'static,
@@ -192,6 +193,12 @@ where
             justification_stream,
             subscription_executor,
             finality_provider,
+        ),
+    ));
+
+    io.extend_with(exchange_rpc::ExchangeApi::to_delegate(
+        exchange_rpc::Exchange::new(
+            client.clone(),
         ),
     ));
 
