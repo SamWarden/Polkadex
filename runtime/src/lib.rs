@@ -58,6 +58,7 @@ use pallet_session::historical as pallet_session_historical;
 #[cfg(any(feature = "std", test))]
 pub use pallet_staking::StakerStatus;
 pub use pallet_substratee_registry;
+pub use pallet_exchange;
 pub use pallet_transaction_payment::{CurrencyAdapter, Multiplier, TargetedFeeAdjustment};
 use pallet_transaction_payment::{FeeDetails, RuntimeDispatchInfo};
 use pallet_verifier_lightclient::{EthereumDifficultyConfig, EthereumHeader};
@@ -754,6 +755,13 @@ parameter_types! {
     pub const MaxApprovals: u32 = 100;
 }
 
+/// Configure the pallet-template in pallets/template.
+impl pallet_exchange::Config for Runtime {
+	type Event = Event;
+	type Currency = Currencies;
+	type OrderId = u32;
+}
+
 impl pallet_treasury::Config for Runtime {
     type PalletId = TreasuryPalletId;
     type Currency = Balances;
@@ -1162,7 +1170,8 @@ construct_runtime!(
         BasicInboundChannel: basic_channel_inbound::{Pallet, Call, Config, Storage, Event},
         Dispatch: pallet_eth_dispatch::{Pallet, Call, Storage, Event<T>, Origin},
         VerifierLightclient: pallet_verifier_lightclient::{Pallet, Call, Storage, Event, Config},
-        ERC20PDEX: erc20_pdex_migration_pallet::{Pallet, Call, Storage, Config, Event<T>}
+        ERC20PDEX: erc20_pdex_migration_pallet::{Pallet, Call, Storage, Config, Event<T>},
+        Exchange: pallet_exchange::{Storage, Call, Event<T>},
     }
 );
 
@@ -1494,6 +1503,7 @@ impl_runtime_apis! {
             add_benchmark!(params, batches, pallet_utility, Utility);
             add_benchmark!(params, batches, pallet_vesting, Vesting);
             add_benchmark!(params, batches, pallet_verifier_lightclient, VerifierLightclient);
+            add_benchmark!(params, batches, pallet_exchange, Exchange);
 
             if batches.is_empty() { return Err("Benchmark not found for this pallet.".into()) }
             Ok(batches)
