@@ -1419,6 +1419,13 @@ impl_runtime_apis! {
         }
     }
 
+    impl exchange_runtime_api::ExchangeApi<Block> for Runtime {
+        fn submit_order() -> u32 {
+            //Exchange::submit_order()
+            1
+        }
+    }
+
     impl sp_session::SessionKeys<Block> for Runtime {
         fn generate_session_keys(seed: Option<Vec<u8>>) -> Vec<u8> {
             SessionKeys::generate(seed)
