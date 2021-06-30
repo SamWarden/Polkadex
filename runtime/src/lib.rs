@@ -1171,7 +1171,7 @@ construct_runtime!(
         Dispatch: pallet_eth_dispatch::{Pallet, Call, Storage, Event<T>, Origin},
         VerifierLightclient: pallet_verifier_lightclient::{Pallet, Call, Storage, Event, Config},
         ERC20PDEX: erc20_pdex_migration_pallet::{Pallet, Call, Storage, Config, Event<T>},
-        Exchange: pallet_exchange::{Storage, Call, Event<T>},
+        Exchange: pallet_exchange::{Pallet, Storage, Call, Event<T>},
     }
 );
 
@@ -1421,7 +1421,7 @@ impl_runtime_apis! {
 
     impl exchange_runtime_api::ExchangeApi<Block> for Runtime {
         fn submit_order() -> u32 {
-            //Exchange::submit_order()
+            Exchange::submit_order();
             1
         }
     }
