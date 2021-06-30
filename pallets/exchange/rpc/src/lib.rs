@@ -10,7 +10,7 @@ use exchange_runtime_api::ExchangeApi as ExchangeRuntimeApi;
 
 #[rpc]
 pub trait ExchangeApi<BlockHash> {
-	#[rpc(name = "submit_order")]
+	#[rpc(name = "exchange_submitOrder")]
 	fn submit_order(&self, at: Option<BlockHash>) -> Result<u32>;
 }
 
